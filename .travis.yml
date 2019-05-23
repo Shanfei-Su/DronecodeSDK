@@ -68,11 +68,6 @@ matrix:
       osx_image: xcode10.1
       env:
       - MATRIX_EVAL="BUILD_TARGET=osx_build"
-    - os: osx
-      name: "iOS"
-      osx_image: xcode10.1
-      env:
-      - MATRIX_EVAL="BUILD_TARGET=ios_build"
     - os: windows
       name: "windows"
       env:
@@ -139,12 +134,6 @@ script:
     make -Cbuild/release -j4;
     ./build/release/src/unit_tests_runner;
     ./build/release/src/backend/test/unit_tests_backend;
-  fi
-- if [[ "${BUILD_TARGET}" = "ios_build" ]]; then
-    cmake -DCMAKE_TOOLCHAIN_FILE=./tools/ios.toolchain.cmake -DPLATFORM=OS -DBUILD_BACKEND=ON -Bbuild/ios -H.;
-    make -Cbuild/ios -j4;
-    cmake -DCMAKE_TOOLCHAIN_FILE=./tools/ios.toolchain.cmake -DPLATFORM=SIMULATOR64 -DBUILD_BACKEND=ON -Bbuild/ios_simulator -H.;
-    make -Cbuild/ios_simulator -j4;
   fi
 - if [[ "${BUILD_TARGET}" = "windows" ]]; then
     cmake -G "Visual Studio 15 2017" -DCMAKE_INSTALL_PREFIX=${TRAVIS_BUILD_DIR}/build/debug/install -DBUILD_BACKEND=ON -Bbuild/debug -H${TRAVIS_BUILD_DIR};
